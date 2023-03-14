@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Signal
-Plugin URI: https://github.com/pluginsWordpress/signal/blob/main/signal.php
+Plugin URI: https://github.com/OUHARRI/signal.git
 Description: Plugin de signal personnalisé pour WordPress
 Version: 1.0
-Author: Marouane
-Author URI: https://github.com/marouane216
+Author: ouharri outman
+Author URI: https://github.com/ouharri
 */
 // Fonction d'activation du plugin
 function mon_plugin_activation()
