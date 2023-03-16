@@ -9,7 +9,9 @@ Author URI: https://github.com/ouharri
 */
 
 
-// Fonction d'activation du plugin
+// Fonction d'activation
+
+
 function mon_plugin_activation(): void
 {
     global $wpdb;
