@@ -1,4 +1,7 @@
 <?php
+
+use JetBrains\PhpStorm\NoReturn;
+
 /*
 Plugin Name: Signal
 Plugin URI: https://github.com/OUHARRI/signal
@@ -8,11 +11,7 @@ Author: ouharri
 Author URI: https://github.com/ouharri
 */
 
-
-// Fonction d'activation
-
-
-function mon_plugin_activation(): void
+function activationSignal(): void
 {
     global $wpdb;
     $table_name = $wpdb->prefix . 'signal';
@@ -35,10 +34,9 @@ function mon_plugin_activation(): void
     dbDelta($sql);
 }
 
-register_activation_hook(__FILE__, 'mon_plugin_activation');
+register_activation_hook(__FILE__, 'activationSignal');
 
-// Fonction de désactivation du plugin
-function mon_plugin_desactivation(): void
+function desactivationSignal(): void
 {
     global $wpdb;
     $table_name = $wpdb->prefix . 'signal';
@@ -46,9 +44,9 @@ function mon_plugin_desactivation(): void
     $wpdb->query("DROP TABLE IF EXISTS $table_name");
 }
 
-register_deactivation_hook(__FILE__, 'mon_plugin_desactivation');
+register_deactivation_hook(__FILE__, 'desactivationSignal');
 
-function signal_add_menu_page(): void
+function addMenuPageSignal(): void
 {
     add_menu_page(
         __('Signal', 'textdomain'),
@@ -69,11 +67,11 @@ function signal_add_menu_page(): void
     );
 }
 
-add_action('admin_menu', 'signal_add_menu_page');
+add_action('admin_menu', 'addMenuPageSignal');
 
 function Signal_callback(): void
 {
-?>
+    ?>
     <style>
         .form {
             margin-top: 10rem;
@@ -115,119 +113,203 @@ function Signal_callback(): void
             color: aliceblue;
         }
     </style>
-    <form class="form" id="form">
-        <div>
-            <input type="radio" name="nom" id="nom">
-            <label class="labelForm" for="nom">nom:</label>
-        </div>
-        <div>
-            <input type="radio" name="prenom" id="prenom">
-            <label class="labelForm" for="prenom">prenom:</label>
-        </div>
-        <div>
-            <input type="radio" name="email" id="email">
-            <label class="labelForm" for="email">Email:</label>
-        </div>
-        <div>
-            <input type="radio" name="type_signal" id="type_signal">
-            <label class="labelForm" for="type_signal">le type de signal:</label>
-        </div>
-        <div>
-            <input type="radio" name="raison_signal" id="raison_signal">
-            <label class="labelForm" for="raison_signal">le raison de votre signal:</label>
-        </div>
-        <div>
-            <input type="radio" name="commentaire" id="commentaire">
-            <label class="labelForm" for="commentaire">un commentaire:</label>
-        </div>
-        <div>
-            <input class="Submit" type="submit" value="Save">
-        </div>
-    </form>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.4/flowbite.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.4/flowbite.min.js"></script>
+
+    <div class="flex flex-col justify-center">
+        <form class="form rounded-lg border-2 border-gray-600 flex flex-col justify-center space-y-3 p-11 m-11"
+              id="form" style="padding-left: 60px;padding-top: 10px;padding-bottom: 20px">
+            <div class="flex flex-col">
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Signal Form :</h3>
+                <p class="text-2xl text-gray-500 dark:text-gray-100">choose input for signal Form</p>
+            </div>
+            <div class="flex" style="display: flex">
+                <div class="flex items-center h-5">
+                    <input name="nom" id="nom" aria-describedby="helper-checkbox-text" type="checkbox"
+                           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                </div>
+                <div class="ml-2 text-sm flex flex-col">
+                    <label for="nom" class="font-medium text-gray-900 dark:text-gray-300">name</label>
+                    <p id="helper-checkbox-text" class="text-xs font-normal text-gray-500 dark:text-gray-300">Add user
+                        name</p>
+                </div>
+            </div>
+            <div class="flex" style="display: flex">
+                <div class="flex items-center h-5">
+                    <input name="prenom" id="prenom" aria-describedby="helper-checkbox-text" type="checkbox"
+                           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                </div>
+                <div class="ml-2 text-sm flex flex-col">
+                    <label for="prenom" class="font-medium text-gray-900 dark:text-gray-300">prenom</label>
+                    <p id="helper-checkbox-text" class="text-xs font-normal text-gray-500 dark:text-gray-300">Add user
+                        last name</p>
+                </div>
+            </div>
+            <div class="flex" style="display: flex">
+                <div class="flex items-center h-5">
+                    <input name="email" id="email" aria-describedby="helper-checkbox-text" type="checkbox"
+                           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                </div>
+                <div class="ml-2 text-sm flex flex-col">
+                    <label for="email" class="font-medium text-gray-900 dark:text-gray-300">email</label>
+                    <p id="helper-checkbox-text" class="text-xs font-normal text-gray-500 dark:text-gray-300">Add user
+                        email</p>
+                </div>
+            </div>
+            <div class="flex" style="display: flex">
+                <div class="flex items-center h-5">
+                    <input name="type_signal" id="type_signal" aria-describedby="helper-checkbox-text" type="checkbox"
+                           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                </div>
+                <div class="ml-2 text-sm flex flex-col">
+                    <label for="type_signal" class="font-medium text-gray-900 dark:text-gray-300">signal type</label>
+                    <p id="helper-checkbox-text" class="text-xs font-normal text-gray-500 dark:text-gray-300">Add type
+                        of signal for user</p>
+                </div>
+            </div>
+            <div class="flex" style="display: flex">
+                <div class="flex items-center h-5">
+                    <input name="raison_signal" id="raison_signal" aria-describedby="helper-checkbox-text"
+                           type="checkbox"
+                           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                </div>
+                <div class="ml-2 text-sm flex flex-col">
+                    <label for="raison_signal" class="font-medium text-gray-900 dark:text-gray-300">raison type</label>
+                    <p id="helper-checkbox-text" class="text-xs font-normal text-gray-500 dark:text-gray-300">Add raison
+                        of signal for user(why he signal)</p>
+                </div>
+            </div>
+            <div class="flex" style="display: flex">
+                <div class="flex items-center h-5">
+                    <input name="commentaire" id="commentaire" aria-describedby="helper-checkbox-text" type="checkbox"
+                           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                </div>
+                <div class="ml-2 text-sm flex flex-col">
+                    <label for="commentaire" class="font-medium text-gray-900 dark:text-gray-300">comment</label>
+                    <p id="helper-checkbox-text" class="text-xs font-normal text-gray-500 dark:text-gray-300">Add
+                        comment of signal for user</p>
+                </div>
+            </div>
+
+            <div style="float: right">
+                <button type="submit" value="Save"
+                        class="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                    add input
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         const form = document.getElementById('form');
         form.addEventListener('submit', event => {
+            let commentaireInput;
+            let raisonInput;
+            let typeInput;
+            let emailInput;
+            let prenomInput;
+            let nomInput;
             event.preventDefault();
             const formData = new FormData(form);
             const data = Object.fromEntries(formData);
             if (data.nom === 'on') {
-                var nomInput = `<div>
+                nomInput = `<div class="flex flex-col">
                                     <label for="nom">nom:</label>
-                                    <input type="text" name="nom" id="nom">
-                                </div>`
+                                    <input type="text" name="nom" id="nom" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                </div>`;
             } else {
-                var nomInput = `<input type="hidden" value=' ' name="nom" id="nom">`
+                nomInput = `<input type="hidden" value=' ' name="nom" id="nom">`;
             }
             if (data.prenom === 'on') {
-                var prenomInput = `<div>
+                prenomInput = `<div class="flex flex-col">
                                     <label for="prenom">prenom:</label>
-                                    <input type="text" name="prenom" id="prenom">
-                                </div>`
+                                    <input type="text" name="prenom" id="prenom" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                </div>`;
             } else {
-                var prenomInput = `<input type="hidden" value=' ' name="prenom" id="prenom">`
+                prenomInput = `<input type="hidden" value=' ' name="prenom" id="prenom" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">`;
             }
             if (data.email === 'on') {
-                var emailInput = `<div>
+                emailInput = `<div class="flex flex-col">
                                     <label for="email">email:</label>
-                                    <input type="email" name="email" id="email">
-                                </div>`
+                                    <input type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                </div>`;
             } else {
-                var emailInput = `<input type="hidden" value=' ' name="email" id="email">`
+                emailInput = `<input type="hidden" value=' ' name="email" id="email">`;
             }
             if (data.type_signal === 'on') {
-                var typeInput = `<div>
+                typeInput = `<div class="flex flex-col">
                                     <label for="type_signal">type de signal:</label>
-                                    <select name="type_signal" id="type_signal">
+                                    <select name="type_signal" id="type_signal" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                         <option value="type 1">type 1</option>
                                         <option value="type 2">type 2</option>
                                         <option value="type 3">type 3</option>
                                     </select>
-                                </div>`
+                                </div>`;
             } else {
-                var typeInput = `<input type="hidden" value=' ' name="type_signal" id="type_signal">`
+                typeInput = `<input type="hidden" value=' ' name="type_signal" id="type_signal" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">`;
             }
             if (data.raison_signal === 'on') {
-                var raisonInput = `<div>
+                raisonInput = `<div class="flex flex-col">
                                     <label for="raison_signal">raison de signal:</label>
-                                    <select name="raison_signal" id="raison_signal">
+                                    <select name="raison_signal" id="raison_signal" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                         <option value="raison 1">raison 1</option>
                                         <option value="raison 2">raison 2</option>
                                         <option value="raison 3">raison 3</option>
                                     </select>
-                                </div>`
+                                </div>`;
             } else {
-                var raisonInput = `<input type="hidden" value=' ' name="raison_signal" id="raison_signal">`
+                raisonInput = `<input type="hidden" value=' ' name="raison_signal" id="raison_signal">`;
             }
             if (data.commentaire === 'on') {
-                var commentaireInput = `<div>
+                commentaireInput = `<div class="flex flex-col">
                                     <label for="commentaire">commentaire:</label>
-                                    <textarea style="resize:none" name="commentaire" id="commentaire" cols="30" rows="10"></textarea>
-                                </div>`
+                                    <textarea style="resize:none" name="commentaire" id="commentaire" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" cols="20" rows="10"></textarea>
+                                </div>`;
             } else {
-                var commentaireInput = `<input type="hidden" value=' ' name="commentaire" id="commentaire">`
+                commentaireInput = `<input type="hidden" value=' ' name="commentaire" id="commentaire">`;
             }
-            const formSelected = `<form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
-                                    ${nomInput}
-                                    ${prenomInput}
-                                    ${emailInput}
-                                    ${typeInput}
-                                    ${raisonInput}
-                                    ${commentaireInput}
-                                    <div>
-                                        <input type="hidden" name="action" value="mon_plugin_register">
-                                        <input class="Submit" type="submit" value="Envoyer">
-                                    </div>
-                                </form>`;
+            const action = "<?php echo esc_url(admin_url('admin-post.php')); ?>";
+
+            const formSelected = `
+            <div class="flex  flex-col justify-center">
+                <form class="form rounded-lg border-2 border-gray-600 flex flex-col justify-center space-y-3 p-11"
+                      id="form" style="margin: 0;padding: 60px 10px;padding-bottom: 20px;width: 100%;"
+                      method="post"
+                      action="${action}"
+                >
+                    <div class="flex flex-col">
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Signal Form :</h3>
+                        <p class="text-2xl text-gray-500 dark:text-gray-100">veillez remplire les champs</p>
+                    </div>
+                        ${nomInput}
+                        ${prenomInput}
+                        ${emailInput}
+                        ${typeInput}
+                        ${raisonInput}
+                        ${commentaireInput}
+                    <div>
+                    <input type="hidden" name="action" value="registerSignal">
+                    <button type="submit" value="Envoyer" class="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Submit</button>
+                    </div>
+                </form>
+            </div>`;
             localStorage.setItem("formSelected", formSelected)
+            Swal.fire(
+                'Form added successfully',
+                'check your page',
+                'success'
+            )
         })
     </script>
-<?php
+    <?php
 }
 
-function mon_plugin_shortcode_signal(): bool|string
+function shortcodeSignal(): bool|string
 {
     ob_start();
-?>
+    ?>
     <style>
         p form {
             display: flex;
@@ -260,21 +342,23 @@ function mon_plugin_shortcode_signal(): bool|string
         }
     </style>
     <p id="p"></p>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.4/flowbite.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.4/flowbite.min.js"></script>
     <script>
-        var p = document.getElementById('p')
-        var formSelected = localStorage.getItem("formSelected")
+        const p = document.getElementById('p');
+        const formSelected = localStorage.getItem("formSelected");
         p.innerHTML = formSelected
     </script>
-<?php
+    <?php
     return ob_get_clean();
 }
 
-add_shortcode('form_signal', 'mon_plugin_shortcode_signal');
-function mon_plugin_register()
+add_shortcode('form_signal', 'shortcodeSignal');
+
+#[NoReturn] function registerSignal(): void
 {
     global $wpdb;
     $table_name = $wpdb->prefix . 'signal';
-
 
     $nom = $_POST['nom'];
     $prenom = $_POST['prenom'];
@@ -299,8 +383,8 @@ function mon_plugin_register()
     exit;
 }
 
-add_action('admin_post_mon_plugin_register', 'mon_plugin_register');
-function affiche_signal_add_menu_page(): void
+add_action('admin_post_registerSignal', 'registerSignal');
+function affiche_addMenuPageSignal(): void
 {
     add_menu_page(
         __('affiche_Signal', 'textdomain'),
@@ -321,7 +405,7 @@ function affiche_signal_add_menu_page(): void
     );
 }
 
-add_action('admin_menu', 'affiche_signal_add_menu_page');
+add_action('admin_menu', 'affiche_addMenuPageSignal');
 
 function affiche_Signal_callback(): void
 {
@@ -329,30 +413,74 @@ function affiche_Signal_callback(): void
     $table_name = $wpdb->prefix . 'signal';
 
     $results = $wpdb->get_results("SELECT * FROM $table_name");
-?>
-    <table>
-        <tr>
-            <td>nom</td>
-            <td>prenom</td>
-            <td>email</td>
-            <td>type_signal</td>
-            <td>raison_signal</td>
-            <td>commentaire</td>
-            <td>date</td>
-        </tr>
-        <?php foreach ($results as $result) { ?>
-            <tr>
-                <td><?= $result->nom ?></td>
-                <td><?= $result->prenom ?></td>
-                <td><?= $result->email ?></td>
-                <td><?= $result->type_signal ?></td>
-                <td><?= $result->raison_signal ?></td>
-                <td><?= $result->commentaire ?></td>
-                <td><?= $result->date ?></td>
-            </tr>
-        <?php } ?>
-    </table>
-<?php
+    ?>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.4/flowbite.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.4/flowbite.min.js"></script>
+
+    <div class="text" style="padding-top: 60px">
+        <h1 class="text-2xl font-bold text-gray-700 dark:text-gray-200">Signal :</h1>
+    </div>
+
+    <div class="container" style="padding-right: 15px;padding-top: 20px">
+
+        <div class="relative overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th scope="col" class="px-6 py-3">
+                        nom
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        prenom
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        email
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        type signal
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        raison signal
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        commentaire
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        date
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($results as $result) { ?>
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <td class="px-6 py-4">
+                            <?= $result->nom ?? 'No First name' ?>
+                        </td>
+                        <td class="px-6 py-4">
+                            <?= $result->prenom ?? 'No Last Name name' ?>
+                        </td>
+                        <td class="px-6 py-4">
+                            <?= $result->email ?? 'No email' ?>
+                        </td>
+                        <td class="px-6 py-4">
+                            <?= $result->type_signal ?? 'No signal type' ?>
+                        </td>
+                        <td class="px-6 py-4">
+                            <?= $result->raison_signal ?? 'No signal raison' ?>
+                        </td>
+                        <td class="px-6 py-4">
+                            <?= $result->commentaire ?? 'No commentaire' ?>
+                        </td>
+                        <td class="px-6 py-4">
+                            <?= $result->date ?? 'No date' ?>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <?php
 }
 
 ?>
